@@ -39,13 +39,13 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
         text_json = r1.read().decode("utf-8")
         conn.close()
         user = json.loads(text_json)
-
+        variable = ''
         list_of_species = []
         for element in user['species']:
             Names = element['name']
             list_of_species.append(Names)
             print(list_of_species)
-            variable = '<ul> <li>{}</li> <ul>'.format(element)
+            variable = variable + '<li>{}</li>'.format(Names)
 
         if resource == '/':
             f = open("form-final.html", 'r')
@@ -57,6 +57,7 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
             print('MESSAGE:', message)
             if message[0] == 'l_spec=on' and message[1] == 'lim_list=':
                  # <ul> <li>My specie 1</li> <li>My specie 2</li> <ul>
+                 # <ul> for unnumbered lists, <ol> for numbered lists and <l> for a list w/o numbers/dots
                 contents = """<!DOCTYPE html>
                     <html lang="en" dir="ltr">
                       <head>
@@ -66,7 +67,7 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                       <body style="background-color: white;">
                         <h1>LIST OF SPECIES</h1>
                         <p>Here's the list of Species:</p>
-                        <p>{}</p>
+                        <l>{}</l>
                         <a href="/">Home Link</a>
                       </body>
                     </html>
