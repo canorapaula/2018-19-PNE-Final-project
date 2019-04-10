@@ -1,3 +1,4 @@
+
 if parametres[0] == 'l_spec=on':
     HOSTNAME = "rest.ensembl.org"
     ENDPOINT = "/info/"
