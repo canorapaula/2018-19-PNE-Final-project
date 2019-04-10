@@ -17,63 +17,66 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
         # -- printing the request line
         termcolor.cprint(self.requestline, 'green')
 
-        f = open("form-final.html", 'r')
-        contents = f.read()
-
-
         termcolor.cprint(self.requestline, 'green')
         print(self.path)
         pathlist = self.path.split('?')
         print(pathlist)
-        resource = pathlist[1]
-        print('resource', resource)
-        parametres = resource.split('&')
-        print('parametres', parametres)
-        if parametres[0] == 'l_spec=on':
-            HOSTNAME = "rest.ensembl.org"
-            ENDPOINT = "/info/"
-            ENDPOINT2 = "species?content-type=application/json"
-            METHOD = "GET"
+        resource = pathlist[0]
+        print('Resources: ', resource)
 
-            headers = {'User-Agent': 'http-client'}
-            conn = http.client.HTTPSConnection(HOSTNAME)
+        # Getting the List of species:
+        HOSTNAME = "rest.ensembl.org"
+        ENDPOINT = "/info/"
+        ENDPOINT2 = "species?content-type=application/json"
+        METHOD = "GET"
 
-            conn.request(METHOD, ENDPOINT + ENDPOINT2, None, headers)
-            r1 = conn.getresponse()
+        headers = {'User-Agent': 'http-client'}
+        conn = http.client.HTTPSConnection(HOSTNAME)
 
-            text_json = r1.read().decode("utf-8")
-            conn.close()
-            user = json.loads(text_json)
+        conn.request(METHOD, ENDPOINT + ENDPOINT2, None, headers)
+        r1 = conn.getresponse()
 
-            for x in user['species']:
-                print('\t\t', end='')
-                print(x['name'])
+        text_json = r1.read().decode("utf-8")
+        conn.close()
+        user = json.loads(text_json)
 
-        if resource == "/":
-            file = open('form-final.html', 'r')
-            contents = file.read()
-        elif resource == "/echo":
-            params = pathlist[1]
-            user_message = params.split("=")
-            message = user_message[1]
-            contents = """
-                    <!DOCTYPE html>
-                    <html lang="en">
-                    <head>     
-                        <meta charset="UTF-8">     
-                        <title>Echo server</title>     
-                    </head>     
-                    <body>     
-                    <h1>Echo of the received message</h1>     
-                    <p>{}<p>                                  
-                    <a href="/">Home Page</a>     
-                    </body>     
-                    </html>""".format(message)
+        list_of_species = []
+        for element in user['species']:
+            Names = element['name']
+            list_of_species.append(Names)
+            print(list_of_species)
+            variable = '<ul> <li>{}</li> <ul>'.format(element)
+
+        if resource == '/':
+            f = open("form-final.html", 'r')
+            contents = f.read()
+        elif resource == '/myserver':
+            mes = pathlist[1]
+            print('MES: ', mes)
+            message = mes.split('&')
+            print('MESSAGE:', message)
+            if message[0] == 'l_spec=on' and message[1] == 'lim_list=':
+                 # <ul> <li>My specie 1</li> <li>My specie 2</li> <ul>
+                contents = """<!DOCTYPE html>
+                    <html lang="en" dir="ltr">
+                      <head>
+                        <meta charset="utf-8">
+                        <title>List of Species</title>
+                      </head>
+                      <body style="background-color: white;">
+                        <h1>LIST OF SPECIES</h1>
+                        <p>Here's the list of Species:</p>
+                        <p>{}</p>
+                        <a href="/">Home Link</a>
+                      </body>
+                    </html>
+                    """.format(variable)
+            else:
+                f = open("error.html", 'r')
+                contents = f.read()
         else:
-            file = open('error.html', 'r')
-            contents = file.read()
-
-
+            f = open("error.html", 'r')
+            contents = f.read()
 
         # Generate response message with html server
         self.send_response(200)
@@ -85,12 +88,7 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
         # -- Sending the body response message
         self.wfile.write(str.encode(contents))
 
-        print()
-        termcolor.cprint('Text received', 'cyan')
-        mes_dict = self.requestline.split('msg=')
-        mes_dict_1 = mes_dict[1].split('&')
-        mes_dict_2 = mes_dict_1[0].split('+')
-        print(mes_dict_2[0])
+
 
         termcolor.cprint('Text received FINISHED', 'cyan')
 
