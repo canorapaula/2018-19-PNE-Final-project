@@ -1,4 +1,4 @@
-# Creating a server for the html files with forms, using form1.html and form2.html
+# FINAL PROJECT BY PAULA CANORA RHODES
 import http.client
 import json
 import http.server
@@ -6,8 +6,6 @@ import socketserver
 import termcolor
 
 PORT = 8009
-
-# Objects inherit properties from BaseHTTPRequestHandler
 
 
 class TestHandler(http.server.BaseHTTPRequestHandler):
@@ -18,11 +16,11 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
         termcolor.cprint(self.requestline, 'green')
 
         termcolor.cprint(self.requestline, 'green')
-        print(self.path)
+        # print(self.path)
         pathlist = self.path.split('?')
-        print(pathlist)
+        # print(pathlist)
         resource = pathlist[0]
-        print('Resources: ', resource)
+        # print('Resources: ', resource)
 
         # Getting the List of species:
         HOSTNAME = "rest.ensembl.org"
@@ -39,20 +37,22 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
         text_json = r1.read().decode("utf-8")
         conn.close()
         user = json.loads(text_json)
-        variable = ''
+        variable_lspec = ''
         list_of_species = []
         for element in user['species']:
             Names = element['name']
             list_of_species.append(Names)
-            print(list_of_species)
-            variable = variable + '<li>{}</li>'.format(Names)
+            # print(list_of_species)
+            variable_lspec = variable_lspec + '<li>{}</li>'.format(Names)
 
+        # Home Link...
         if resource == '/':
             f = open("form-final.html", 'r')
             contents = f.read()
+        # When choosing an option...
         elif resource == '/myserver':
             mes = pathlist[1]
-            print('MES: ', mes)
+            # print('MES: ', mes)
             message = mes.split('&')
             print('MESSAGE:', message)
             if message[0] == 'l_spec=on' and message[1] == 'lim_list=':
@@ -71,10 +71,26 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                         <a href="/">Home Link</a>
                       </body>
                     </html>
-                    """.format(variable)
+                    """.format(variable_lspec)
+            elif message[0] == 'kary=on' and message[1] == 'spec_kary=':
+                contents = """<!DOCTYPE html>
+                    <html lang="en" dir="ltr">
+                      <head>
+                        <meta charset="utf-8">
+                        <title>List of Species</title>
+                      </head>
+                      <body style="background-color: white;">
+                        <h1>LIST OF SPECIES</h1>
+                        <p>Here's the list of Species:</p>
+                        <l>{}</l>
+                        <a href="/">Home Link</a>
+                      </body>
+                    </html>
+                    """.format(variable_lspec)
             else:
                 f = open("error.html", 'r')
                 contents = f.read()
+        # When an error occurs...
         else:
             f = open("error.html", 'r')
             contents = f.read()
@@ -89,10 +105,7 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
         # -- Sending the body response message
         self.wfile.write(str.encode(contents))
 
-
-
         termcolor.cprint('Text received FINISHED', 'cyan')
-
 
 # -- Main Program
 # The "" with nothing in them means use the local IP adress
