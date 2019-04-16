@@ -87,6 +87,7 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                       </body>
                     </html>
                     """.format(variable_lspec)
+
             else:
                 f = open("error.html", 'r')
                 contents = f.read()
