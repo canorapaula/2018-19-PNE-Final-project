@@ -66,9 +66,9 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                       </head>
                       <body style="background-color: white;">
                         <h1>LIST OF SPECIES</h1>
+                        <a href="/">Home Link</a>
                         <p>Here's the list of Species:</p>
                         <l>{}</l>
-                        <a href="/">Home Link</a>
                       </body>
                     </html>
                     """.format(variable_lspec)
