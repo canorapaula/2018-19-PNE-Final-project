@@ -18,9 +18,10 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
         termcolor.cprint(self.requestline, 'green')
         # print(self.path)
         pathlist = self.path.split('?')
-        # print(pathlist)
+        print(pathlist)
         resource = pathlist[0]
-        # print('Resources: ', resource)
+        print('Resources: ', resource)
+
 
         # Getting the List of species:
         HOSTNAME = "rest.ensembl.org"
@@ -50,15 +51,8 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
             f = open("form-final.html", 'r')
             contents = f.read()
         # When choosing an option...
-        elif resource == '/myserver':
-            mes = pathlist[1]
-            # print('MES: ', mes)
-            message = mes.split('&')
-            print('MESSAGE:', message)
-            if message[0] == 'l_spec=on' and message[1] == 'lim_list=':
-                 # <ul> <li>My specie 1</li> <li>My specie 2</li> <ul>
-                 # <ul> for unnumbered lists, <ol> for numbered lists and <l> for a list w/o numbers/dots
-                contents = """<!DOCTYPE html>
+        elif resource == '/listSpecies':
+            contents = """<!DOCTYPE html>
                     <html lang="en" dir="ltr">
                       <head>
                         <meta charset="utf-8">
@@ -67,34 +61,44 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                       <body style="background-color: white;">
                         <h1>LIST OF SPECIES</h1>
                         <a href="/">Home Link</a>
-                        <p>Here's the list of Species:</p>
                         <l>{}</l>
-                      </body>
-                    </html>
-                    """.format(variable_lspec)
-            elif message[0] == 'kary=on' and message[1] == 'spec_kary=':
-                contents = """<!DOCTYPE html>
-                    <html lang="en" dir="ltr">
-                      <head>
-                        <meta charset="utf-8">
-                        <title>List of Species</title>
-                      </head>
-                      <body style="background-color: white;">
-                        <h1>LIST OF SPECIES</h1>
-                        <p>Here's the list of Species:</p>
-                        <l>{}</l>
-                        <a href="/">Home Link</a>
                       </body>
                     </html>
                     """.format(variable_lspec)
 
-            else:
-                f = open("error.html", 'r')
-                contents = f.read()
+        # Getting Karyotype
+        """
+        mes = pathlist[1]
+        # print('MES: ', mes)
+        message = mes.split('&')
+        print('MESSAGE:', message)
+        
+        animal = message[2].split('=')
+        SPECIE = animal[1]
+        """
+
+        LINK = 'http://rest.ensembl.org/info/assembly/homo_sapiens?content-type=application/json'
+        HOSTNAME = "rest.ensembl.org"
+        ENDPOINT = "/info/"
+        ENDPOINT2 = "assembly/"
+
+        ENDPOINT3 = "?content-type=application/json"
+        METHOD = "GET"
+
+        conn.request(METHOD, HOSTNAME + ENDPOINT + ENDPOINT2 + SPECIE + ENDPOINT3, None, headers)
+        r1 = conn.getresponse()
+        text_json = r1.read().decode("utf-8")
+        conn.close()
+        user = json.loads(text_json)
+        termcolor.cprint('LINK {}'.format(HOSTNAME + ENDPOINT + ENDPOINT2 + SPECIE + ENDPOINT3), 'green')
+        karyotype = ''
+        for k in user['karyotype']:
+            karyotype = + k
+
         # When an error occurs...
         else:
             f = open("error.html", 'r')
-            contents = f.read()
+        contents = f.read()
 
         # Generate response message with html server
         self.send_response(200)

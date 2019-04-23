@@ -7,19 +7,32 @@
   <body>
     <h3>Please select the option you want to proceed with:</h3>
 
-    <form action="myserver" method="get">
-      List of Species
-      <input type="checkbox" name="l_spec">
-      Limit  <input type="text" name="lim_list">
-      <br><br>
-      Karyotype
-      <input type="checkbox" name="kary">
-      Specie  <input type="text" name="spec_kary">
+    <h3>List of Species:</h3>
+    <form action="listSpecies" method="get">
+      </select>
+        <input type="Submit"value="Send"/>
+    </form>
+
+    <h3>List of Species:</h3>
+    <form action="listSpecies" method="get">
+      Limit:  <input type="text" name="limit">
       <br>
       </select>
        <br>
         <input type="Submit"/>
+      <br><br>
     </form>
+
+    <h3>Karyotype:</h3>
+    <form action="karyotype" method="get">
+      Specie:  <input type="text" name="specie">
+      <br>
+      </select>
+       <br>
+        <input type="Submit"/>
+      <br><br>
+    </form>
+
 
   </body>
 </html>
