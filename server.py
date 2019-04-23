@@ -104,7 +104,20 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                       </body>
                     </html>
                     """.format(karyotype)
+        # When option chosen is Chromosome length:
+        elif resource == 'chromosomeLength':
+            parametres = pathlist[1].split('&')
+            print('parametres', parametres)
+            spec = parametres[0].split('=')
+            print('spec', spec)
+            specie = spec[1]
+            chrom = parametres[1].split('=')
+            chromosome = chrom[1]
+            print('chromosome', chromosome)
 
+            for q in user['top_level_region']:
+                q = chromosome
+                print(chromosome['length'])
         # When an error occurs...
         else:
             f = open("error.html", 'r')
