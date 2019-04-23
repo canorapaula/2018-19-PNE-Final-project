@@ -7,7 +7,6 @@ import termcolor
 
 PORT = 8009
 
-
 class TestHandler(http.server.BaseHTTPRequestHandler):
 
     def do_GET(self):
@@ -18,10 +17,9 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
         termcolor.cprint(self.requestline, 'green')
         # print(self.path)
         pathlist = self.path.split('?')
-        print(pathlist)
+        print('pathlist: ', pathlist)
         resource = pathlist[0]
         print('Resources: ', resource)
-
 
         # Getting the List of species:
         HOSTNAME = "rest.ensembl.org"
@@ -31,7 +29,6 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
 
         headers = {'User-Agent': 'http-client'}
         conn = http.client.HTTPSConnection(HOSTNAME)
-
         conn.request(METHOD, ENDPOINT + ENDPOINT2, None, headers)
         r1 = conn.getresponse()
 
@@ -45,12 +42,14 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
             list_of_species.append(Names)
             # print(list_of_species)
             variable_lspec = variable_lspec + '<li>{}</li>'.format(Names)
+        # Getting the karyotype:
 
         # Home Link...
         if resource == '/':
             f = open("form-final.html", 'r')
             contents = f.read()
-        # When choosing an option...
+        # When choosing an option
+        # When option chosen is List of Species:
         elif resource == '/listSpecies':
             contents = """<!DOCTYPE html>
                     <html lang="en" dir="ltr">
@@ -66,39 +65,50 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                     </html>
                     """.format(variable_lspec)
 
-        # Getting Karyotype
-        """
-        mes = pathlist[1]
-        # print('MES: ', mes)
-        message = mes.split('&')
-        print('MESSAGE:', message)
-        
-        animal = message[2].split('=')
-        SPECIE = animal[1]
-        """
+        # When option chosen is Karyotype:
+        elif resource == '/karyotype':
+            life = pathlist[1].split('=')
+            specie = life[1]
+            print('specie', specie)
 
-        LINK = 'http://rest.ensembl.org/info/assembly/homo_sapiens?content-type=application/json'
-        HOSTNAME = "rest.ensembl.org"
-        ENDPOINT = "/info/"
-        ENDPOINT2 = "assembly/"
+            LINK = 'http://rest.ensembl.org/info/assembly/homo_sapiens?content-type=application/json'
+            HOSTNAME = "rest.ensembl.org"
+            ENDPOINT = "/info/"
+            ENDPOINT2 = "assembly/"
 
-        ENDPOINT3 = "?content-type=application/json"
-        METHOD = "GET"
+            ENDPOINT3 = "?content-type=application/json"
+            METHOD = "GET"
 
-        conn.request(METHOD, HOSTNAME + ENDPOINT + ENDPOINT2 + SPECIE + ENDPOINT3, None, headers)
-        r1 = conn.getresponse()
-        text_json = r1.read().decode("utf-8")
-        conn.close()
-        user = json.loads(text_json)
-        termcolor.cprint('LINK {}'.format(HOSTNAME + ENDPOINT + ENDPOINT2 + SPECIE + ENDPOINT3), 'green')
-        karyotype = ''
-        for k in user['karyotype']:
-            karyotype = + k
+            conn.request(METHOD, HOSTNAME + ENDPOINT + ENDPOINT2 + specie + ENDPOINT3, None, headers)
+            r1 = conn.getresponse()
+            text_json = r1.read().decode("utf-8")
+            conn.close()
+
+            user = json.loads(text_json)
+            termcolor.cprint('LINK {}'.format(HOSTNAME + ENDPOINT + ENDPOINT2 + specie + ENDPOINT3), 'green')
+
+            karyotype = ''
+            for k in user['karyotype']:
+                print(k)
+                karyotype = karyotype + '<li>{}</li>'.format(k)
+                contents = """<!DOCTYPE html>
+                    <html lang="en" dir="ltr">
+                      <head>
+                        <meta charset="utf-8">
+                        <title>Karyotype</title>
+                      </head>
+                      <body style="background-color: white;">
+                        <h1>KARYOTYPE</h1>
+                        <a href="/">Home Link</a>
+                        <l>{}</l>
+                      </body>
+                    </html>
+                    """.format(karyotype)
 
         # When an error occurs...
         else:
             f = open("error.html", 'r')
-        contents = f.read()
+            contents = f.read()
 
         # Generate response message with html server
         self.send_response(200)
@@ -112,8 +122,6 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
 
         termcolor.cprint('Text received FINISHED', 'cyan')
 
-# -- Main Program
-# The "" with nothing in them means use the local IP adress
 socketserver.TCPServer.allow_reuse_address = True
 
 with socketserver.TCPServer(("", PORT), TestHandler) as httpd:
