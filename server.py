@@ -49,7 +49,7 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
             contents = f.read()
         # When choosing an option
         # When option chosen is List of Species:
-        elif len(pathlist) == 1:
+        elif len(pathlist) == 1 and resource == '/listSpecies':
             contents = """<!DOCTYPE html>
                     <html lang="en" dir="ltr">
                       <head>
@@ -59,6 +59,7 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                       <body style="background-color: white;">
                         <h1>LIST OF SPECIES</h1>
                         <a href="/">Home Link</a>
+                        <br>
                         <l>{}</l>
                       </body>
                     </html>
@@ -81,6 +82,7 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                                   <body style="background-color: white;">
                                     <h1>LIST OF SPECIES</h1>
                                     <a href="/">Home Link</a>
+                                    <br>
                                     <l>{}</l>
                                   </body>
                                 </html>
@@ -128,6 +130,7 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                       <body style="background-color: white;">
                         <h1>Karyotype of {}</h1>
                         <l>{}</l>
+                        <br>
                         <a href="/">Home Link</a>
                       </body>
                     </html>
