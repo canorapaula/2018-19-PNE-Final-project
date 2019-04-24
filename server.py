@@ -5,7 +5,7 @@ import http.server
 import socketserver
 import termcolor
 
-PORT = 8009
+PORT = 8000
 
 class TestHandler(http.server.BaseHTTPRequestHandler):
 
@@ -28,7 +28,7 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
         METHOD = "GET"
 
         headers = {'User-Agent': 'http-client'}
-        conn = http.client.HTTPSConnection(HOSTNAME)
+        conn = http.client.HTTPConnection(HOSTNAME)
         conn.request(METHOD, ENDPOINT + ENDPOINT2, None, headers)
         r1 = conn.getresponse()
 
@@ -42,7 +42,6 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
             list_of_species.append(Names)
             # print(list_of_species)
             variable_lspec = variable_lspec + '<li>{}</li>'.format(Names)
-        # Getting the karyotype:
 
         # Home Link...
         if resource == '/':
@@ -50,7 +49,7 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
             contents = f.read()
         # When choosing an option
         # When option chosen is List of Species:
-        elif resource == '/listSpecies':
+        elif len(pathlist) == 1:
             contents = """<!DOCTYPE html>
                     <html lang="en" dir="ltr">
                       <head>
@@ -64,6 +63,28 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                       </body>
                     </html>
                     """.format(variable_lspec)
+        elif len(pathlist) == 2 and resource == '/listSpecies':
+            lim = pathlist[1].split('=')
+            limit = lim[1]
+            print('limit:', limit)
+            limit = int(limit)
+            limited = list_of_species[:limit]
+            limit_list = ''
+            for element in limited:
+                limit_list = limit_list + '<li>{}</li>'.format(element)
+            contents = """<!DOCTYPE html>
+                                <html lang="en" dir="ltr">
+                                  <head>
+                                    <meta charset="utf-8">
+                                    <title>List of Species</title>
+                                  </head>
+                                  <body style="background-color: white;">
+                                    <h1>LIST OF SPECIES</h1>
+                                    <a href="/">Home Link</a>
+                                    <l>{}</l>
+                                  </body>
+                                </html>
+                                """.format(limit_list)
 
         # When option chosen is Karyotype:
         elif resource == '/karyotype':
@@ -79,9 +100,16 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
             ENDPOINT3 = "?content-type=application/json"
             METHOD = "GET"
 
-            conn.request(METHOD, HOSTNAME + ENDPOINT + ENDPOINT2 + specie + ENDPOINT3, None, headers)
+            headers = {'User-Agent': 'http-client'}
+            conn = http.client.HTTPConnection(HOSTNAME)
+            conn.request(METHOD, ENDPOINT + ENDPOINT2 + specie + ENDPOINT3, None, headers)
             r1 = conn.getresponse()
+            print('r1', r1.status)
+
+            total = HOSTNAME + ENDPOINT + ENDPOINT2 + specie + ENDPOINT3
+            print('total', total)
             text_json = r1.read().decode("utf-8")
+            print('txtjason', text_json)
             conn.close()
 
             user = json.loads(text_json)
@@ -95,29 +123,69 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                     <html lang="en" dir="ltr">
                       <head>
                         <meta charset="utf-8">
-                        <title>Karyotype</title>
+                        <title>KARYOTYPE</title>
                       </head>
                       <body style="background-color: white;">
-                        <h1>KARYOTYPE</h1>
-                        <a href="/">Home Link</a>
+                        <h1>Karyotype of {}</h1>
                         <l>{}</l>
+                        <a href="/">Home Link</a>
                       </body>
                     </html>
-                    """.format(karyotype)
+                    """.format(specie, karyotype)
+
         # When option chosen is Chromosome length:
-        elif resource == 'chromosomeLength':
+        elif resource == '/chromosomeLength':
             parametres = pathlist[1].split('&')
             print('parametres', parametres)
             spec = parametres[0].split('=')
             print('spec', spec)
             specie = spec[1]
+            print('specie', specie)
             chrom = parametres[1].split('=')
             chromosome = chrom[1]
             print('chromosome', chromosome)
 
+            LINK = 'http://rest.ensembl.org/info/assembly/homo_sapiens?content-type=application/json'
+            HOSTNAME = "rest.ensembl.org"
+            ENDPOINT = "/info/"
+            ENDPOINT2 = "assembly/"
+
+            ENDPOINT3 = "?content-type=application/json"
+            METHOD = "GET"
+
+            headers = {'User-Agent': 'http-client'}
+            conn = http.client.HTTPConnection(HOSTNAME)
+            conn.request(METHOD, ENDPOINT + ENDPOINT2 + specie + ENDPOINT3, None, headers)
+            r1 = conn.getresponse()
+            # print('r1', r1.status)
+
+            total = HOSTNAME + ENDPOINT + ENDPOINT2 + specie + ENDPOINT3
+            # print('total', total)
+            text_json = r1.read().decode("utf-8")
+            # print('txtjason', text_json)
+            conn.close()
+
+            user = json.loads(text_json)
+            termcolor.cprint('LINK {}'.format(HOSTNAME + ENDPOINT + ENDPOINT2 + specie + ENDPOINT3), 'green')
+
             for q in user['top_level_region']:
-                q = chromosome
-                print(chromosome['length'])
+                if chromosome == q['name']:
+                    length = q['length']
+                    contents = """<!DOCTYPE html>
+                    <html lang="en" dir="ltr">
+                      <head>
+                        <meta charset="utf-8">
+                        <title>CHROMOSOME LENGTH</title>
+                      </head>
+                      <body style="background-color: white;">
+                        <h1>Length of chromosome {} of specie {}</h1>
+                        <l>The length is: {}</l>
+                        <br><br>
+                        <a href="/">Home Link</a>
+                      </body>
+                    </html>
+                    """.format(chromosome, specie, length)
+
         # When an error occurs...
         else:
             f = open("error.html", 'r')

@@ -157,3 +157,37 @@ karyotype = ''
 for k in user['karyotype']:
     karyotype = + k
 """
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+elif len(pathlist) == 2:
+lim = pathlist[1].split('=')
+limit = lim[1]
+print('limit:', limit)
+limit = int(limit)
+contents = """<!DOCTYPE html>
+                               <html lang="en" dir="ltr">
+                                 <head>
+                                   <meta charset="utf-8">
+                                   <title>List of Species</title>
+                                 </head>
+                                 <body style="background-color: white;">
+                                   <h1>LIST OF SPECIES</h1>
+                                   <a href="/">Home Link</a>
+                                   <l>{}</l>
+                                 </body>
+                               </html>
+                               """.format(variable_lspec[:limit])
