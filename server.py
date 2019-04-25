@@ -59,7 +59,7 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                       <body style="background-color: white;">
                         <h1>LIST OF SPECIES</h1>
                         <a href="/">Home Link</a>
-                        <br>
+                        <br><br>
                         <l>{}</l>
                       </body>
                     </html>
@@ -82,7 +82,7 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                                   <body style="background-color: white;">
                                     <h1>LIST OF SPECIES</h1>
                                     <a href="/">Home Link</a>
-                                    <br>
+                                    <br><br>
                                     <l>{}</l>
                                   </body>
                                 </html>

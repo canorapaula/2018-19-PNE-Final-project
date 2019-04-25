@@ -1,0 +1,197 @@
+Endpoints for the Basic Level:
+
+Endpoint 1: http://localhost:8000/
+Output:
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Index Page</title>
+  </head>
+  <body style="background-color: lightblue;">
+    <h3>Please select the option you want to proceed with:</h3>
+
+    <h3>Complete List of Species:</h3>
+    <form action="listSpecies" method="get">
+      </select>
+        <input type="Submit"value="Send"/>
+    </form>
+
+    <h3>List of Species:</h3>
+    <form action="listSpecies" method="get">
+      Limit:  <input type="text" name="limit">
+      <br>
+      </select>
+       <br>
+        <input type="Submit"value="Send"/>
+      <br><br>
+    </form>
+
+    <h3>Karyotype:</h3>
+    <form action="karyotype" method="get">
+      Specie:  <input type="text" name="specie">
+      <br>
+      </select>
+       <br>
+        <input type="Submit"value="Send"/>
+      <br><br>
+    </form>
+
+    <h3>Chromosome length:</h3>
+    <form action="chromosomeLength" method="get">
+      Specie:  <input type="text" name="specie">
+      <br>
+      Chromosome:  <input type="text" name="chromo">
+      <br>
+      </select>
+       <br>
+        <input type="Submit"value="Send"/>
+      <br><br>
+    </form>
+
+  </body>
+</html>
+
+Endpoint 2: http://localhost:8000/listSpecies
+Output:
+<!DOCTYPE html>
+                    <html lang="en" dir="ltr">
+                      <head>
+                        <meta charset="utf-8">
+                        <title>List of Species</title>
+                      </head>
+                      <body style="background-color: white;">
+                        <h1>LIST OF SPECIES</h1>
+                        <a href="/">Home Link</a>
+                        <br><br>
+                        <l><li>mus_musculus_aj</li><li>mus_musculus_cbaj</li><li>tursiops_truncatus</li><li>parus_major</li><li>cebus_capucinus</li><li>jaculus_jaculus</li><li>calidris_pugnax</li><li>mus_musculus_nodshiltj</li><li>ornithorhynchus_anatinus</li><li>neolamprologus_brichardi</li><li>monodelphis_domestica</li><li>chlorocebus_sabaeus</li><li>mus_musculus_casteij</li><li>lepisosteus_oculatus</li><li>stegastes_partitus</li><li>saccharomyces_cerevisiae</li><li>gambusia_affinis</li><li>salvator_merianae</li><li>theropithecus_gelada</li><li>dipodomys_ordii</li><li>mus_musculus_c57bl6nj</li><li>canis_familiaris</li><li>drosophila_melanogaster</li><li>myotis_lucifugus</li><li>ursus_maritimus</li><li>mus_spicilegus</li><li>microtus_ochrogaster</li><li>mus_caroli</li><li>sus_scrofa</li><li>oreochromis_niloticus</li><li>astyanax_mexicanus</li><li>mus_musculus_c3hhej</li><li>zonotrichia_albicollis</li><li>mus_musculus_129s1svimj</li><li>pelodiscus_sinensis</li><li>mesocricetus_auratus</li><li>scophthalmus_maximus</li><li>danio_rerio</li><li>canis_lupus_dingo</li><li>periophthalmus_magnuspinnatus</li><li>erinaceus_europaeus</li><li>numida_meleagris</li><li>macaca_fascicularis</li><li>ciona_intestinalis</li><li>kryptolebias_marmoratus</li><li>ictidomys_tridecemlineatus</li><li>bison_bison_bison</li><li>oryzias_latipes_hsok</li><li>phascolarctos_cinereus</li><li>equus_asinus_asinus</li><li>urocitellus_parryii</li><li>mus_spretus</li><li>mola_mola</li><li>gadus_morhua</li><li>ailuropoda_melanoleuca</li><li>petromyzon_marinus</li><li>peromyscus_maniculatus_bairdii</li><li>cyanistes_caeruleus</li><li>ciona_savignyi</li><li>mus_musculus_akrj</li><li>labrus_bergylta</li><li>octodon_degus</li><li>poecilia_latipinna</li><li>caenorhabditis_elegans</li><li>haplochromis_burtoni</li><li>ovis_aries</li><li>amphiprion_percula</li><li>coturnix_japonica</li><li>dasypus_novemcinctus</li><li>rattus_norvegicus</li><li>tupaia_belangeri</li><li>pundamilia_nyererei</li><li>saimiri_boliviensis_boliviensis</li><li>cavia_aperea</li><li>esox_lucius</li><li>heterocephalus_glaber_male</li><li>apteryx_haastii</li><li>pan_troglodytes</li><li>spermophilus_dauricus</li><li>castor_canadensis</li><li>chinchilla_lanigera</li><li>gopherus_agassizii</li><li>lepidothrix_coronata</li><li>pan_paniscus</li><li>chrysemys_picta_bellii</li><li>aotus_nancymaae</li><li>maylandia_zebra</li><li>melopsittacus_undulatus</li><li>scleropages_formosus</li><li>mus_musculus_balbcj</li><li>meleagris_gallopavo</li><li>ficedula_albicollis</li><li>ochotona_princeps</li><li>cricetulus_griseus_chok1gshd</li><li>mus_musculus_lpj</li><li>anolis_carolinensis</li><li>echinops_telfairi</li><li>sphenodon_punctatus</li><li>xiphophorus_couchianus</li><li>mus_pahari</li><li>choloepus_hoffmanni</li><li>fundulus_heteroclitus</li><li>heterocephalus_glaber_female</li><li>anser_brachyrhynchus</li><li>poecilia_mexicana</li><li>prolemur_simus</li><li>cynoglossus_semilaevis</li><li>homo_sapiens</li><li>vicugna_pacos</li><li>mus_musculus_wsbeij</li><li>pygocentrus_nattereri</li><li>eptatretus_burgeri</li><li>meriones_unguiculatus</li><li>macaca_nemestrina</li><li>microcebus_murinus</li><li>panthera_pardus</li><li>paramormyrops_kingsleyae</li><li>amphilophus_citrinellus</li><li>colobus_angolensis_palliatus</li><li>monopterus_albus</li><li>taeniopygia_guttata</li><li>neovison_vison</li><li>cricetulus_griseus_picr</li><li>apteryx_owenii</li><li>mus_musculus_pwkphj</li><li>crocodylus_porosus</li><li>oryzias_melastigma</li><li>oryzias_latipes_hni</li><li>lonchura_striata_domestica</li><li>mustela_putorius_furo</li><li>loxodonta_africana</li><li>bos_mutus</li><li>cricetulus_griseus_crigri</li><li>vulpes_vulpes</li><li>xenopus_tropicalis</li><li>rhinopithecus_bieti</li><li>mus_musculus_nzohlltj</li><li>bos_taurus</li><li>mandrillus_leucophaeus</li><li>cavia_porcellus</li><li>notamacropus_eugenii</li><li>takifugu_rubripes</li><li>gasterosteus_aculeatus</li><li>poecilia_formosa</li><li>mastacembelus_armatus</li><li>piliocolobus_tephrosceles</li><li>anabas_testudineus</li><li>hippocampus_comes</li><li>oryctolagus_cuniculus</li><li>nomascus_leucogenys</li><li>amphiprion_ocellaris</li><li>callithrix_jacchus</li><li>xiphophorus_maculatus</li><li>oryzias_latipes</li><li>latimeria_chalumnae</li><li>acanthochromis_polyacanthus</li><li>felis_catus</li><li>carlito_syrichta</li><li>otolemur_garnettii</li><li>cyprinodon_variegatus</li><li>rhinopithecus_roxellana</li><li>equus_caballus</li><li>mus_musculus_fvbnj</li><li>ursus_americanus</li><li>pteropus_vampyrus</li><li>gorilla_gorilla</li><li>procavia_capensis</li><li>mus_musculus_dba2j</li><li>gallus_gallus</li><li>chelonoidis_abingdonii</li><li>pongo_abelii</li><li>sorex_araneus</li><li>serinus_canaria</li><li>seriola_lalandi_dorsalis</li><li>pogona_vitticeps</li><li>dromaius_novaehollandiae</li><li>poecilia_reticulata</li><li>astatotilapia_calliptera</li><li>nothoprocta_perdicaria</li><li>macaca_mulatta</li><li>fukomys_damarensis</li><li>junco_hyemalis</li><li>sarcophilus_harrisii</li><li>mus_musculus</li><li>ictalurus_punctatus</li><li>papio_anubis</li><li>marmota_marmota_marmota</li><li>anas_platyrhynchos_platyrhynchos</li><li>propithecus_coquereli</li><li>panthera_tigris_altaica</li><li>apteryx_rowi</li><li>calidris_pygmaea</li><li>nannospalax_galili</li><li>tetraodon_nigroviridis</li><li>cercocebus_atys</li><li>manacus_vitellinus</li><li>notechis_scutatus</li><li>seriola_dumerili</li><li>capra_hircus</li></l>
+                      </body>
+                    </html>
+
+Endpoint 3: http://localhost:8000/listSpecies?limit=5
+Output:
+<!DOCTYPE html>
+                                <html lang="en" dir="ltr">
+                                  <head>
+                                    <meta charset="utf-8">
+                                    <title>List of Species</title>
+                                  </head>
+                                  <body style="background-color: white;">
+                                    <h1>LIST OF SPECIES</h1>
+                                    <a href="/">Home Link</a>
+                                    <br><br>
+                                    <l><li>dromaius_novaehollandiae</li><li>eptatretus_burgeri</li><li>castor_canadensis</li><li>apteryx_owenii</li><li>anolis_carolinensis</li></l>
+                                  </body>
+                                </html>
+
+Endpoint 4: http://localhost:8000/karyotype?specie=homo_sapiens
+Output:
+<!DOCTYPE html>
+                    <html lang="en" dir="ltr">
+                      <head>
+                        <meta charset="utf-8">
+                        <title>KARYOTYPE</title>
+                      </head>
+                      <body style="background-color: white;">
+                        <h1>Karyotype of homo_sapiens</h1>
+                        <l><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li><li>8</li><li>9</li><li>10</li><li>11</li><li>12</li><li>13</li><li>14</li><li>15</li><li>16</li><li>17</li><li>18</li><li>19</li><li>20</li><li>21</li><li>22</li><li>X</li><li>Y</li><li>MT</li></l>
+                        <br>
+                        <a href="/">Home Link</a>
+                      </body>
+                    </html>
+
+Endpoint 5: http://localhost:8000/karyotype?specie=mouse
+Output:
+<!DOCTYPE html>
+                    <html lang="en" dir="ltr">
+                      <head>
+                        <meta charset="utf-8">
+                        <title>KARYOTYPE</title>
+                      </head>
+                      <body style="background-color: white;">
+                        <h1>Karyotype of mouse</h1>
+                        <l><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li><li>8</li><li>9</li><li>10</li><li>11</li><li>12</li><li>13</li><li>14</li><li>15</li><li>16</li><li>17</li><li>18</li><li>19</li><li>X</li><li>Y</li><li>MT</li></l>
+                        <br>
+                        <a href="/">Home Link</a>
+                      </body>
+                    </html>
+
+Endpoint 6: http://localhost:8000/karyotype?specie=danio_rerio
+Output:
+<!DOCTYPE html>
+                    <html lang="en" dir="ltr">
+                      <head>
+                        <meta charset="utf-8">
+                        <title>KARYOTYPE</title>
+                      </head>
+                      <body style="background-color: white;">
+                        <h1>Karyotype of danio_rerio</h1>
+                        <l><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li><li>8</li><li>9</li><li>10</li><li>11</li><li>12</li><li>13</li><li>14</li><li>15</li><li>16</li><li>17</li><li>18</li><li>19</li><li>20</li><li>21</li><li>22</li><li>23</li><li>24</li><li>25</li><li>MT</li></l>
+                        <br>
+                        <a href="/">Home Link</a>
+                      </body>
+                    </html>
+
+Endpoint 7: http://localhost:8000/chromosomeLength?specie=homo_sapiens&chromo=5
+Output:
+<!DOCTYPE html>
+                    <html lang="en" dir="ltr">
+                      <head>
+                        <meta charset="utf-8">
+                        <title>CHROMOSOME LENGTH</title>
+                      </head>
+                      <body style="background-color: white;">
+                        <h1>Length of chromosome 5 of specie homo_sapiens</h1>
+                        <l>The length is: 181538259</l>
+                        <br><br>
+                        <a href="/">Home Link</a>
+                      </body>
+                    </html>
+
+Endpoint 8: http://localhost:8000/chromosomeLength?specie=homo_sapiens&chromo=22
+Output:
+<!DOCTYPE html>
+                    <html lang="en" dir="ltr">
+                      <head>
+                        <meta charset="utf-8">
+                        <title>CHROMOSOME LENGTH</title>
+                      </head>
+                      <body style="background-color: white;">
+                        <h1>Length of chromosome 22 of specie homo_sapiens</h1>
+                        <l>The length is: 50818468</l>
+                        <br><br>
+                        <a href="/">Home Link</a>
+                      </body>
+                    </html>
+
+Endpoint 9: http://localhost:8000/chromosomeLength?specie=mouse&chromo=4
+Output:
+<!DOCTYPE html>
+                    <html lang="en" dir="ltr">
+                      <head>
+                        <meta charset="utf-8">
+                        <title>CHROMOSOME LENGTH</title>
+                      </head>
+                      <body style="background-color: white;">
+                        <h1>Length of chromosome 4 of specie mouse</h1>
+                        <l>The length is: 156508116</l>
+                        <br><br>
+                        <a href="/">Home Link</a>
+                      </body>
+                    </html>
+
+Endpoint 10: http://localhost:8000/chromosomeLength?specie=danio_rerio&chromo=4
+Output:
+<!DOCTYPE html>
+                    <html lang="en" dir="ltr">
+                      <head>
+                        <meta charset="utf-8">
+                        <title>CHROMOSOME LENGTH</title>
+                      </head>
+                      <body style="background-color: white;">
+                        <h1>Length of chromosome 4 of specie danio_rerio</h1>
+                        <l>The length is: 78093715</l>
+                        <br><br>
+                        <a href="/">Home Link</a>
+                      </body>
+                    </html>
