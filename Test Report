@@ -195,3 +195,35 @@ Output:
                         <a href="/">Home Link</a>
                       </body>
                     </html>
+
+Endpoint 11: http://localhost:8000/karyotype?specie=drosophila_melanogaster
+Output:
+<!DOCTYPE html>
+                    <html lang="en" dir="ltr">
+                      <head>
+                        <meta charset="utf-8">
+                        <title>KARYOTYPE</title>
+                      </head>
+                      <body style="background-color: white;">
+                        <h1>Karyotype of drosophila_melanogaster</h1>
+                        <l><li>2L</li><li>2R</li><li>3L</li><li>3R</li><li>4</li><li>X</li><li>Y</li><li>mitochondrion_genome</li></l>
+                        <br>
+                        <a href="/">Home Link</a>
+                      </body>
+                    </html>
+
+Endpoint 12: http://localhost:8000/chromosomeLength?specie=drosophila_melanogaster&chromo=3R
+Output:
+<!DOCTYPE html>
+                    <html lang="en" dir="ltr">
+                      <head>
+                        <meta charset="utf-8">
+                        <title>CHROMOSOME LENGTH</title>
+                      </head>
+                      <body style="background-color: white;">
+                        <h1>Length of chromosome 3R of specie drosophila_melanogaster</h1>
+                        <l>The length is: 32079331</l>
+                        <br><br>
+                        <a href="/">Home Link</a>
+                      </body>
+                    </html>
