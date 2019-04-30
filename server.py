@@ -1,4 +1,5 @@
 # FINAL PROJECT BY PAULA CANORA RHODES
+
 import http.client
 import json
 import http.server
@@ -6,6 +7,7 @@ import socketserver
 import termcolor
 
 PORT = 8000
+
 
 class TestHandler(http.server.BaseHTTPRequestHandler):
 
@@ -19,7 +21,7 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
         pathlist = self.path.split('?')
         print('pathlist: ', pathlist)
         resource = pathlist[0]
-        print('Resources: ', resource)
+        print('resource: ', resource)
 
         # Getting the List of species:
         HOSTNAME = "rest.ensembl.org"
@@ -38,15 +40,16 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
         variable_lspec = ''
         list_of_species = []
         for element in user['species']:
-            Names = element['name']
-            list_of_species.append(Names)
+            names = element['name']
+            list_of_species.append(names)
             # print(list_of_species)
-            variable_lspec = variable_lspec + '<li>{}</li>'.format(Names)
+            variable_lspec = variable_lspec + '<li>{}</li>'.format(names)
 
         # Home Link...
         if resource == '/':
             f = open("form-final.html", 'r')
             contents = f.read()
+
         # When choosing an option
         # When option chosen is List of Species:
         elif len(pathlist) == 1 and resource == '/listSpecies':
@@ -162,7 +165,7 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
             r1 = conn.getresponse()
             # print('r1', r1.status)
 
-            total = HOSTNAME + ENDPOINT + ENDPOINT2 + specie + ENDPOINT3
+            # total = HOSTNAME + ENDPOINT + ENDPOINT2 + specie + ENDPOINT3
             # print('total', total)
             text_json = r1.read().decode("utf-8")
             # print('txtjason', text_json)
@@ -189,6 +192,143 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                     </html>
                     """.format(chromosome, specie, length)
 
+
+        # When option chosen is Human Gene Sequence:
+        elif resource == '/geneSeq':
+
+            # Get the Human Gene id
+            genee = pathlist[1].split('=')
+            print('genee', genee)
+            gene_name = genee[1]
+
+            LINK = 'http://rest.ensembl.org/homology/symbol/human/BRCA2?content-type=application/json'
+            HOSTNAME = "rest.ensembl.org"
+            ENDPOINT = "/homology/symbol/human/" + gene_name + "?content-type=application/json"
+            METHOD = "GET"
+
+            headers = {'User-Agent': 'http-client'}
+            conn = http.client.HTTPConnection(HOSTNAME)
+            conn.request(METHOD, ENDPOINT, None, headers)
+            r1 = conn.getresponse()
+            # print('r1', r1.status)
+
+            text_json = r1.read().decode("utf-8")
+            print('txtjason', text_json)
+            conn.close()
+
+            user = json.loads(text_json)
+            termcolor.cprint('LINK {}'.format(HOSTNAME + ENDPOINT), 'green')
+
+            # Get the id for the gene sequence
+            for x in user['data']:
+                id = x['id']
+                print('id', id)
+
+            # Get the sequence:
+
+            LINK = 'http://rest.ensembl.org/sequence/id/ENSG00000139618?content-type=application/json'
+            HOSTNAME = "rest.ensembl.org"
+            ENDPOINT = "/sequence/id/" + id + "?content-type=application/json"
+            METHOD = "GET"
+
+
+            headers = {'User-Agent': 'http-client'}
+            conn = http.client.HTTPConnection(HOSTNAME)
+            conn.request(METHOD, ENDPOINT, None, headers)
+            r1 = conn.getresponse()
+            print('r1', r1.status)
+
+            text_json = r1.read().decode("utf-8")
+            print('txtjason', text_json)
+            conn.close()
+
+            user = json.loads(text_json)
+            termcolor.cprint('user {}'.format(user), 'cyan')
+            termcolor.cprint('LINK {}'.format(HOSTNAME + ENDPOINT), 'green')
+
+            sequence = user['seq']
+
+            step = 100
+            seqlist = [sequence[i:i + step] for i in range(0, len(sequence), step)]
+            Sequence = ''
+            for x in seqlist:
+                Sequence += x + '<br>'
+
+            contents = """<!DOCTYPE html>
+                                <html lang="en" dir="ltr">
+                                  <head>
+                                    <meta charset="utf-8">
+                                    <title>HUMAN GENE</title>
+                                  </head>
+                                  <body style="background-color: white;">
+                                    <h1>Human Gene Sequence</h1>
+                                    <l>The Sequence of the gene {} is: {}</l>
+                                    <br><br>
+                                    <a href="/">Home Link</a>
+                                  </body>
+                                </html>
+                                """.format(gene_name, Sequence)
+
+
+        # When option chosen is Human Gene Sequence Info:
+        elif resource == '/geneInfo':
+            # length = (end - start) + 1
+
+            LINK = 'http://rest.ensembl.org/overlap/id/ENSG00000157764?feature=gene;content-type=application/json'
+            HOSTNAME = "rest.ensembl.org"
+            ENDPOINT = "/overlap/id/" + id + "?feature=gene;content-type=application/json"
+            METHOD = "GET"
+
+            headers = {'User-Agent': 'http-client'}
+            conn = http.client.HTTPConnection(HOSTNAME)
+            conn.request(METHOD, ENDPOINT, None, headers)
+            r1 = conn.getresponse()
+            print('r1', r1.status)
+
+            text_json = r1.read().decode("utf-8")
+            print('txtjason', text_json)
+            conn.close()
+
+            user = json.loads(text_json)
+            termcolor.cprint('user {}'.format(user), 'cyan')
+            termcolor.cprint('LINK {}'.format(HOSTNAME + ENDPOINT), 'green')
+
+            for x in user['0']:
+                start = x['start']
+                print('start', start)
+                end = x['end']
+                print('end', end)
+
+
+            contents = """<!DOCTYPE html>
+                                <html lang="en" dir="ltr">
+                                  <head>
+                                    <meta charset="utf-8">
+                                    <title>HUMAN GENE INFO</title>
+                                  </head>
+                                  <body style="background-color: white;">
+                                    <h1>Human Gene Sequence Info</h1>
+                                    <l>The Info of the gene is:</l>
+                                    <br><br>
+                                    Start: {}
+                                    <a href="/">Home Link</a>
+                                  </body>
+                                </html>
+                                """.format(start)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         # When an error occurs...
         else:
             f = open("error.html", 'r')
@@ -205,6 +345,7 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
         self.wfile.write(str.encode(contents))
 
         termcolor.cprint('Text received FINISHED', 'cyan')
+
 
 socketserver.TCPServer.allow_reuse_address = True
 
