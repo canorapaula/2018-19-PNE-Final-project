@@ -7,7 +7,7 @@ import socketserver
 import termcolor
 
 PORT = 8000
-
+socketserver.TCPServer.allow_reuse_address = True
 
 class TestHandler(http.server.BaseHTTPRequestHandler):
 
@@ -272,7 +272,33 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
 
         # When option chosen is Human Gene Sequence Info:
         elif resource == '/geneInfo':
-            # length = (end - start) + 1
+
+            # Get the Human Gene name
+            genee = pathlist[1].split('=')
+            print('genee', genee)
+            gene_name = genee[1]
+
+            LINK = 'http://rest.ensembl.org/homology/symbol/human/BRCA2?content-type=application/json'
+            HOSTNAME = "rest.ensembl.org"
+            ENDPOINT = "/homology/symbol/human/" + gene_name + "?content-type=application/json"
+            METHOD = "GET"
+
+            headers = {'User-Agent': 'http-client'}
+            conn = http.client.HTTPConnection(HOSTNAME)
+            conn.request(METHOD, ENDPOINT, None, headers)
+            r1 = conn.getresponse()
+
+            text_json = r1.read().decode("utf-8")
+            conn.close()
+
+            user = json.loads(text_json)
+            termcolor.cprint('LINK {}'.format(HOSTNAME + ENDPOINT), 'green')
+
+            # Get the id for the gene sequence
+            for x in user['data']:
+                id = x['id']
+                print('id', id)
+
 
             LINK = 'http://rest.ensembl.org/overlap/id/ENSG00000157764?feature=gene;content-type=application/json'
             HOSTNAME = "rest.ensembl.org"
@@ -293,12 +319,13 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
             termcolor.cprint('user {}'.format(user), 'cyan')
             termcolor.cprint('LINK {}'.format(HOSTNAME + ENDPOINT), 'green')
 
-            for x in user['0']:
+            for x in user:
                 start = x['start']
-                print('start', start)
                 end = x['end']
-                print('end', end)
+                id = x['id']
+                chromosome = x['seq_region_name']
 
+            length = (end - start) + 1
 
             contents = """<!DOCTYPE html>
                                 <html lang="en" dir="ltr">
@@ -308,15 +335,115 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                                   </head>
                                   <body style="background-color: white;">
                                     <h1>Human Gene Sequence Info</h1>
-                                    <l>The Info of the gene is:</l>
+                                    <l>The Info of the gene {} is:</l>
                                     <br><br>
-                                    Start: {}
+                                    Start: {}<br>
+                                    End: {}<br>
+                                    Length: {}<br>
+                                    Id: {}<br>
+                                    Chromosome: {}
+                                    <br><br>
                                     <a href="/">Home Link</a>
                                   </body>
                                 </html>
-                                """.format(start)
+                                """.format(gene_name, start, end, length, id, chromosome)
 
+        # When option chosen is Human Gene Sequence Info:
+        elif resource == '/geneCalc':
 
+            genee = pathlist[1].split('=')
+            print('genee', genee)
+            gene_name = genee[1]
+
+            LINK = 'http://rest.ensembl.org/homology/symbol/human/BRCA2?content-type=application/json'
+            HOSTNAME = "rest.ensembl.org"
+            ENDPOINT = "/homology/symbol/human/" + gene_name + "?content-type=application/json"
+            METHOD = "GET"
+
+            headers = {'User-Agent': 'http-client'}
+            conn = http.client.HTTPConnection(HOSTNAME)
+            conn.request(METHOD, ENDPOINT, None, headers)
+            r1 = conn.getresponse()
+
+            text_json = r1.read().decode("utf-8")
+            conn.close()
+
+            user = json.loads(text_json)
+            termcolor.cprint('LINK {}'.format(HOSTNAME + ENDPOINT), 'green')
+
+            # Get the id for the gene sequence
+            for x in user['data']:
+                id = x['id']
+                print('id', id)
+
+            LINK = 'http://rest.ensembl.org/sequence/id/ENSG00000139618?content-type=application/json'
+            HOSTNAME = "rest.ensembl.org"
+            ENDPOINT = "/sequence/id/" + id + "?content-type=application/json"
+            METHOD = "GET"
+
+            headers = {'User-Agent': 'http-client'}
+            conn = http.client.HTTPConnection(HOSTNAME)
+            conn.request(METHOD, ENDPOINT, None, headers)
+            r1 = conn.getresponse()
+            print('r1', r1.status)
+
+            text_json = r1.read().decode("utf-8")
+            print('txtjason', text_json)
+            conn.close()
+
+            user = json.loads(text_json)
+            termcolor.cprint('user {}'.format(user), 'cyan')
+            termcolor.cprint('LINK {}'.format(HOSTNAME + ENDPOINT), 'green')
+
+            sequence = user['seq']
+            print('sequene', sequence)
+
+            len_sequence = len(sequence)
+
+            A_number = 0
+            C_number = 0
+            T_number = 0
+            G_number = 0
+            for x in sequence:
+                if x == 'A':
+                    A_number += 1
+                elif x == 'C':
+                    C_number += 1
+                elif x == 'T':
+                    T_number += 1
+                elif x == 'G':
+                    G_number += 1
+
+            if len_sequence > 0:
+                per_A = round(100.0 * A_number / len_sequence, 1)
+                per_C = round(100.0 * C_number / len_sequence, 1)
+                per_T = round(100.0 * T_number / len_sequence, 1)
+                per_G = round(100.0 * G_number / len_sequence, 1)
+            else:
+                per_A = 0
+                per_C = 0
+                per_G = 0
+                per_T = 0
+
+            contents = """<!DOCTYPE html>
+                                            <html lang="en" dir="ltr">
+                                              <head>
+                                                <meta charset="utf-8">
+                                                <title>HUMAN GENE CALC</title>
+                                              </head>
+                                              <body style="background-color: white;">
+                                                <h1>Human Gene Sequence Calculations</h1>
+                                                <l>The Info of the gene {} is:</l>
+                                                <br><br>
+                                                A percentage: {}%<br>
+                                                C percentage: {}%<br>
+                                                G percentage: {}%<br>
+                                                T percentage: {}%
+                                                <br><br>
+                                                <a href="/">Home Link</a>
+                                              </body>
+                                            </html>
+                                            """.format(gene_name, per_A, per_C, per_G, per_T)
 
 
 
