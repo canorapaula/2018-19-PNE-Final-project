@@ -445,14 +445,36 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                                             </html>
                                             """.format(gene_name, per_A, per_C, per_G, per_T)
 
+        # When option chosen is Gene List:
+        elif resource == '/geneList':
+            ppp = pathlist[1].split('&')
+            print('ppp', ppp)
+            param1 = ppp[0].split('=')
+            param2 = ppp[1].split('=')
+            param3 = ppp[2].split('=')
+            chromo = param1[1]
+            start = param2[1]
+            end = param3[1]
+            print('chromo {} , start {} , end {}'.format(chromo, start, end))
 
+            LINK = 'http://rest.ensembl.org/overlap/region/human/7:140424943-140624564?content-type=application/json;feature=gene;feature=transcript;feature=cds;feature=exon'
+            HOSTNAME = "rest.ensembl.org"
+            ENDPOINT = "/overlap/region/human/" + chromo + ":" + start + "-" + end + "?content-type=application/json;feature=gene;feature=transcript;feature=cds;feature=exon"
+            METHOD = "GET"
 
+            headers = {'User-Agent': 'http-client'}
+            conn = http.client.HTTPConnection(HOSTNAME)
+            conn.request(METHOD, ENDPOINT, None, headers)
+            r1 = conn.getresponse()
+            print('r1', r1.status)
 
+            text_json = r1.read().decode("utf-8")
+            print('txtjason', text_json)
+            conn.close()
 
-
-
-
-
+            user = json.loads(text_json)
+            termcolor.cprint('user {}'.format(user), 'cyan')
+            termcolor.cprint('LINK {}'.format(HOSTNAME + ENDPOINT), 'green')
 
 
 
