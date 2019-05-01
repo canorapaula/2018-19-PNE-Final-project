@@ -1,9 +1,9 @@
 # FINAL PROJECT BY PAULA CANORA RHODES
 
 import http.client
-import json
 import http.server
 import socketserver
+import json
 import termcolor
 
 PORT = 8000
