@@ -513,8 +513,6 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
         termcolor.cprint('Text received FINISHED', 'cyan')
 
 
-socketserver.TCPServer.allow_reuse_address = True
-
 with socketserver.TCPServer(("", PORT), TestHandler) as httpd:
     print("Serving at PORT: {}".format(PORT))
 
