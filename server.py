@@ -231,7 +231,6 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
             ENDPOINT = "/sequence/id/" + id + "?content-type=application/json"
             METHOD = "GET"
 
-
             headers = {'User-Agent': 'http-client'}
             conn = http.client.HTTPConnection(HOSTNAME)
             conn.request(METHOD, ENDPOINT, None, headers)
@@ -298,7 +297,6 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
             for x in user['data']:
                 id = x['id']
                 print('id', id)
-
 
             LINK = 'http://rest.ensembl.org/overlap/id/ENSG00000157764?feature=gene;content-type=application/json'
             HOSTNAME = "rest.ensembl.org"
@@ -476,7 +474,26 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
             termcolor.cprint('user {}'.format(user), 'cyan')
             termcolor.cprint('LINK {}'.format(HOSTNAME + ENDPOINT), 'green')
 
-
+            external_name = ''
+            for x in user:
+                type = x['feature_type']
+                if type == 'gene':
+                    ext_name = x['external_name']
+                    external_name = external_name + '<li>{}</li>'.format(ext_name)
+                    contents = """<!DOCTYPE html>
+                                <html lang="en" dir="ltr">
+                                  <head>
+                                    <meta charset="utf-8">
+                                    <title>GENE LIST</title>
+                                  </head>
+                                  <body style="background-color: white;">
+                                    <h1>Gene List:</h1>
+                                    <l>{}</l>
+                                    <br><br>
+                                    <a href="/">Home Link</a>
+                                  </body>
+                                </html>
+                                """.format(external_name)
 
         # When an error occurs...
         else:
