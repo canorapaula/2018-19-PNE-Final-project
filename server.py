@@ -72,24 +72,39 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
             limit = lim[1]
             print('limit:', limit)
             limit = int(limit)
-            limited = list_of_species[:limit]
-            limit_list = ''
-            for element in limited:
-                limit_list = limit_list + '<li>{}</li>'.format(element)
-            contents = """<!DOCTYPE html>
-                                <html lang="en" dir="ltr">
-                                  <head>
-                                    <meta charset="utf-8">
-                                    <title>List of Species</title>
-                                  </head>
-                                  <body style="background-color: white;">
-                                    <h1>LIST OF SPECIES</h1>
-                                    <a href="/">Home Link</a>
-                                    <br><br>
-                                    <l>{}</l>
-                                  </body>
-                                </html>
-                                """.format(limit_list)
+            if limit > 208:
+                contents = """<!DOCTYPE html>
+        <html lang="en" dir="ltr">
+          <head>
+            <meta charset="utf-8">
+            <title>Error server</title>
+          </head>
+          <body style="background-color: tomato;">
+            <h1>ERROR SERVER</h1>
+            <p>Sorry, the limit number you inserted is too high. Try to insert a number between 1 and 208.</p>
+            <a href="/">Home Link</a>
+          </body>
+        </html>
+"""
+            else:
+                limited = list_of_species[:limit]
+                limit_list = ''
+                for element in limited:
+                    limit_list = limit_list + '<li>{}</li>'.format(element)
+                contents = """<!DOCTYPE html>
+                                    <html lang="en" dir="ltr">
+                                      <head>
+                                        <meta charset="utf-8">
+                                        <title>List of Species</title>
+                                      </head>
+                                      <body style="background-color: white;">
+                                        <h1>LIST OF SPECIES</h1>
+                                        <a href="/">Home Link</a>
+                                        <br><br>
+                                        <l>{}</l>
+                                      </body>
+                                    </html>
+                                    """.format(limit_list)
 
         # When option chosen is Karyotype:
         elif resource == '/karyotype':
