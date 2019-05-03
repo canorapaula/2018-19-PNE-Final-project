@@ -1,6 +1,6 @@
 Endpoints for the Basic Level:
 
-Endpoint 1: http://localhost:8000/
+Endpoint: http://localhost:8000/
 Output:
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
@@ -52,7 +52,7 @@ Output:
   </body>
 </html>
 
-Endpoint 2: http://localhost:8000/listSpecies
+Endpoint: http://localhost:8000/listSpecies
 Output:
 <!DOCTYPE html>
                     <html lang="en" dir="ltr">
@@ -68,7 +68,7 @@ Output:
                       </body>
                     </html>
 
-Endpoint 3: http://localhost:8000/listSpecies?limit=5
+Endpoint: http://localhost:8000/listSpecies?limit=5
 Output:
 <!DOCTYPE html>
                                 <html lang="en" dir="ltr">
@@ -84,7 +84,7 @@ Output:
                                   </body>
                                 </html>
 
-Endpoint 4: http://localhost:8000/karyotype?specie=homo_sapiens
+Endpoint: http://localhost:8000/karyotype?specie=homo_sapiens
 Output:
 <!DOCTYPE html>
                     <html lang="en" dir="ltr">
@@ -100,7 +100,7 @@ Output:
                       </body>
                     </html>
 
-Endpoint 5: http://localhost:8000/karyotype?specie=mouse
+Endpoint: http://localhost:8000/karyotype?specie=mouse
 Output:
 <!DOCTYPE html>
                     <html lang="en" dir="ltr">
@@ -116,7 +116,7 @@ Output:
                       </body>
                     </html>
 
-Endpoint 6: http://localhost:8000/karyotype?specie=danio_rerio
+Endpoint: http://localhost:8000/karyotype?specie=danio_rerio
 Output:
 <!DOCTYPE html>
                     <html lang="en" dir="ltr">
@@ -132,7 +132,7 @@ Output:
                       </body>
                     </html>
 
-Endpoint 7: http://localhost:8000/chromosomeLength?specie=homo_sapiens&chromo=5
+Endpoint: http://localhost:8000/chromosomeLength?specie=homo_sapiens&chromo=5
 Output:
 <!DOCTYPE html>
                     <html lang="en" dir="ltr">
@@ -148,7 +148,7 @@ Output:
                       </body>
                     </html>
 
-Endpoint 8: http://localhost:8000/chromosomeLength?specie=homo_sapiens&chromo=22
+Endpoint: http://localhost:8000/chromosomeLength?specie=homo_sapiens&chromo=22
 Output:
 <!DOCTYPE html>
                     <html lang="en" dir="ltr">
@@ -164,7 +164,7 @@ Output:
                       </body>
                     </html>
 
-Endpoint 9: http://localhost:8000/chromosomeLength?specie=mouse&chromo=4
+Endpoint: http://localhost:8000/chromosomeLength?specie=mouse&chromo=4
 Output:
 <!DOCTYPE html>
                     <html lang="en" dir="ltr">
@@ -180,7 +180,7 @@ Output:
                       </body>
                     </html>
 
-Endpoint 10: http://localhost:8000/chromosomeLength?specie=danio_rerio&chromo=4
+Endpoint: http://localhost:8000/chromosomeLength?specie=danio_rerio&chromo=4
 Output:
 <!DOCTYPE html>
                     <html lang="en" dir="ltr">
@@ -196,7 +196,7 @@ Output:
                       </body>
                     </html>
 
-Endpoint 11: http://localhost:8000/karyotype?specie=drosophila_melanogaster
+Endpoint: http://localhost:8000/karyotype?specie=drosophila_melanogaster
 Output:
 <!DOCTYPE html>
                     <html lang="en" dir="ltr">
@@ -212,7 +212,7 @@ Output:
                       </body>
                     </html>
 
-Endpoint 12: http://localhost:8000/chromosomeLength?specie=drosophila_melanogaster&chromo=3R
+Endpoint: http://localhost:8000/chromosomeLength?specie=drosophila_melanogaster&chromo=3R
 Output:
 <!DOCTYPE html>
                     <html lang="en" dir="ltr">
