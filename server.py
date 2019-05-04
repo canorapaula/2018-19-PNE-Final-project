@@ -202,24 +202,38 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
 
             user = json.loads(text_json)
             termcolor.cprint('LINK {}'.format(HOSTNAME + ENDPOINT + ENDPOINT2 + specie + ENDPOINT3), 'green')
-
-            for q in user['top_level_region']:
-                if chromosome == q['name']:
-                    length = q['length']
-                    contents = """<!DOCTYPE html>
-                    <html lang="en" dir="ltr">
-                      <head>
-                        <meta charset="utf-8">
-                        <title>CHROMOSOME LENGTH</title>
-                      </head>
-                      <body style="background-color: white;">
-                        <h1>Length of chromosome {} of specie {}</h1>
-                        <l>The length is: {}</l>
-                        <br><br>
-                        <a href="/">Home Link</a>
-                      </body>
-                    </html>
-                    """.format(chromosome, specie, length)
+            if specie not in list_of_species:
+                contents = """<!DOCTYPE html>
+                        <html lang="en" dir="ltr">
+                          <head>
+                            <meta charset="utf-8">
+                            <title>Error server</title>
+                          </head>
+                          <body style="background-color: tomato;">
+                            <h1>ERROR SERVER</h1>
+                            <p>Sorry, the specie you inserted is not in the data base.</p>
+                            <a href="/">Home Link</a>
+                          </body>
+                        </html>
+                """
+            else:
+                for q in user['top_level_region']:
+                    if chromosome == q['name']:
+                        length = q['length']
+                        contents = """<!DOCTYPE html>
+                        <html lang="en" dir="ltr">
+                          <head>
+                            <meta charset="utf-8">
+                            <title>CHROMOSOME LENGTH</title>
+                          </head>
+                          <body style="background-color: white;">
+                            <h1>Length of chromosome {} of specie {}</h1>
+                            <l>The length is: {}</l>
+                            <br><br>
+                            <a href="/">Home Link</a>
+                          </body>
+                        </html>
+                        """.format(chromosome, specie, length)
 
 
         # When option chosen is Human Gene Sequence:
