@@ -116,7 +116,6 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
             HOSTNAME = "rest.ensembl.org"
             ENDPOINT = "/info/"
             ENDPOINT2 = "assembly/"
-
             ENDPOINT3 = "?content-type=application/json"
             METHOD = "GET"
 
@@ -135,24 +134,39 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
             user = json.loads(text_json)
             termcolor.cprint('LINK {}'.format(HOSTNAME + ENDPOINT + ENDPOINT2 + specie + ENDPOINT3), 'green')
 
-            karyotype = ''
-            for k in user['karyotype']:
-                print(k)
-                karyotype = karyotype + '<li>{}</li>'.format(k)
+            if specie not in list_of_species:
                 contents = """<!DOCTYPE html>
-                    <html lang="en" dir="ltr">
-                      <head>
-                        <meta charset="utf-8">
-                        <title>KARYOTYPE</title>
-                      </head>
-                      <body style="background-color: white;">
-                        <h1>Karyotype of {}</h1>
-                        <l>{}</l>
-                        <br>
-                        <a href="/">Home Link</a>
-                      </body>
-                    </html>
-                    """.format(specie, karyotype)
+                        <html lang="en" dir="ltr">
+                          <head>
+                            <meta charset="utf-8">
+                            <title>Error server</title>
+                          </head>
+                          <body style="background-color: tomato;">
+                            <h1>ERROR SERVER</h1>
+                            <p>Sorry, the specie you inserted is not in the data base.</p>
+                            <a href="/">Home Link</a>
+                          </body>
+                        </html>
+                """
+            else:
+                karyotype = ''
+                for k in user['karyotype']:
+                    print(k)
+                    karyotype = karyotype + '<li>{}</li>'.format(k)
+                    contents = """<!DOCTYPE html>
+                        <html lang="en" dir="ltr">
+                          <head>
+                            <meta charset="utf-8">
+                            <title>KARYOTYPE</title>
+                          </head>
+                          <body style="background-color: white;">
+                            <h1>Karyotype of {}</h1>
+                            <l>{}</l>
+                            <br>
+                            <a href="/">Home Link</a>
+                          </body>
+                        </html>
+                        """.format(specie, karyotype)
 
         # When option chosen is Chromosome length:
         elif resource == '/chromosomeLength':
