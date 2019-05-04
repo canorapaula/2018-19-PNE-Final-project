@@ -13,15 +13,13 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
 
     def do_GET(self):
 
-        # -- printing the request line
+        # Printing the request line
         termcolor.cprint(self.requestline, 'green')
 
         termcolor.cprint(self.requestline, 'green')
         # print(self.path)
         pathlist = self.path.split('?')
-        print('pathlist: ', pathlist)
         resource = pathlist[0]
-        print('resource: ', resource)
 
         # Getting the List of species:
         HOSTNAME = "rest.ensembl.org"
@@ -50,8 +48,10 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
             f = open("form-final.html", 'r')
             contents = f.read()
 
-        # When choosing an option
+        # When choosing an option:
+
         # When option chosen is List of Species:
+        # When limit is not inserted:
         elif len(pathlist) == 1 and resource == '/listSpecies':
             contents = """<!DOCTYPE html>
                     <html lang="en" dir="ltr">
@@ -67,11 +67,15 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                       </body>
                     </html>
                     """.format(variable_lspec)
+
+        # When limit is inserted:
         elif len(pathlist) == 2 and resource == '/listSpecies':
+            # Get the limit
             lim = pathlist[1].split('=')
             limit = lim[1]
-            print('limit:', limit)
             limit = int(limit)
+
+            # If limit inserted is higher than the number of species in the databae:
             if limit > 208:
                 contents = """<!DOCTYPE html>
         <html lang="en" dir="ltr">
@@ -86,6 +90,8 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
           </body>
         </html>
 """
+
+            # When the limit is OK:
             else:
                 limited = list_of_species[:limit]
                 limit_list = ''
@@ -108,9 +114,9 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
 
         # When option chosen is Karyotype:
         elif resource == '/karyotype':
+            # Get the specie inserted:
             life = pathlist[1].split('=')
             specie = life[1]
-            print('specie', specie)
 
             LINK = 'http://rest.ensembl.org/info/assembly/homo_sapiens?content-type=application/json'
             HOSTNAME = "rest.ensembl.org"
@@ -123,62 +129,41 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
             conn = http.client.HTTPConnection(HOSTNAME)
             conn.request(METHOD, ENDPOINT + ENDPOINT2 + specie + ENDPOINT3, None, headers)
             r1 = conn.getresponse()
-            print('r1', r1.status)
 
             total = HOSTNAME + ENDPOINT + ENDPOINT2 + specie + ENDPOINT3
-            print('total', total)
             text_json = r1.read().decode("utf-8")
-            print('txtjason', text_json)
             conn.close()
 
             user = json.loads(text_json)
             termcolor.cprint('LINK {}'.format(HOSTNAME + ENDPOINT + ENDPOINT2 + specie + ENDPOINT3), 'green')
 
-            if specie not in list_of_species:
+            # Get the karyotype for the specie inserted:
+            karyotype = ''
+            for k in user['karyotype']:
+                karyotype = karyotype + '<li>{}</li>'.format(k)
                 contents = """<!DOCTYPE html>
-                        <html lang="en" dir="ltr">
-                          <head>
-                            <meta charset="utf-8">
-                            <title>Error server</title>
-                          </head>
-                          <body style="background-color: tomato;">
-                            <h1>ERROR SERVER</h1>
-                            <p>Sorry, the specie you inserted is not in the data base.</p>
-                            <a href="/">Home Link</a>
-                          </body>
-                        </html>
-                """
-            else:
-                karyotype = ''
-                for k in user['karyotype']:
-                    print(k)
-                    karyotype = karyotype + '<li>{}</li>'.format(k)
-                    contents = """<!DOCTYPE html>
-                        <html lang="en" dir="ltr">
-                          <head>
-                            <meta charset="utf-8">
-                            <title>KARYOTYPE</title>
-                          </head>
-                          <body style="background-color: white;">
-                            <h1>Karyotype of {}</h1>
-                            <l>{}</l>
-                            <br>
-                            <a href="/">Home Link</a>
-                          </body>
-                        </html>
-                        """.format(specie, karyotype)
+                    <html lang="en" dir="ltr">
+                      <head>
+                        <meta charset="utf-8">
+                        <title>KARYOTYPE</title>
+                      </head>
+                      <body style="background-color: white;">
+                        <h1>Karyotype of {}</h1>
+                        <l>{}</l>
+                        <br>
+                        <a href="/">Home Link</a>
+                      </body>
+                    </html>
+                    """.format(specie, karyotype)
 
         # When option chosen is Chromosome length:
         elif resource == '/chromosomeLength':
+            # Get the parameters inserted:
             parametres = pathlist[1].split('&')
-            print('parametres', parametres)
             spec = parametres[0].split('=')
-            print('spec', spec)
             specie = spec[1]
-            print('specie', specie)
             chrom = parametres[1].split('=')
             chromosome = chrom[1]
-            print('chromosome', chromosome)
 
             LINK = 'http://rest.ensembl.org/info/assembly/homo_sapiens?content-type=application/json'
             HOSTNAME = "rest.ensembl.org"
@@ -192,48 +177,30 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
             conn = http.client.HTTPConnection(HOSTNAME)
             conn.request(METHOD, ENDPOINT + ENDPOINT2 + specie + ENDPOINT3, None, headers)
             r1 = conn.getresponse()
-            # print('r1', r1.status)
 
-            # total = HOSTNAME + ENDPOINT + ENDPOINT2 + specie + ENDPOINT3
-            # print('total', total)
             text_json = r1.read().decode("utf-8")
-            # print('txtjason', text_json)
             conn.close()
 
             user = json.loads(text_json)
             termcolor.cprint('LINK {}'.format(HOSTNAME + ENDPOINT + ENDPOINT2 + specie + ENDPOINT3), 'green')
-            if specie not in list_of_species:
-                contents = """<!DOCTYPE html>
-                        <html lang="en" dir="ltr">
-                          <head>
-                            <meta charset="utf-8">
-                            <title>Error server</title>
-                          </head>
-                          <body style="background-color: tomato;">
-                            <h1>ERROR SERVER</h1>
-                            <p>Sorry, the specie you inserted is not in the data base.</p>
-                            <a href="/">Home Link</a>
-                          </body>
-                        </html>
-                """
-            else:
-                for q in user['top_level_region']:
-                    if chromosome == q['name']:
-                        length = q['length']
-                        contents = """<!DOCTYPE html>
-                        <html lang="en" dir="ltr">
-                          <head>
-                            <meta charset="utf-8">
-                            <title>CHROMOSOME LENGTH</title>
-                          </head>
-                          <body style="background-color: white;">
-                            <h1>Length of chromosome {} of specie {}</h1>
-                            <l>The length is: {}</l>
-                            <br><br>
-                            <a href="/">Home Link</a>
-                          </body>
-                        </html>
-                        """.format(chromosome, specie, length)
+
+            for q in user['top_level_region']:
+                if chromosome == q['name']:
+                    length = q['length']
+                    contents = """<!DOCTYPE html>
+                    <html lang="en" dir="ltr">
+                      <head>
+                        <meta charset="utf-8">
+                        <title>CHROMOSOME LENGTH</title>
+                      </head>
+                      <body style="background-color: white;">
+                        <h1>Length of chromosome {} of specie {}</h1>
+                        <l>The length is: {}</l>
+                        <br><br>
+                        <a href="/">Home Link</a>
+                      </body>
+                    </html>
+                    """.format(chromosome, specie, length)
 
 
         # When option chosen is Human Gene Sequence:
@@ -241,7 +208,6 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
 
             # Get the Human Gene id
             genee = pathlist[1].split('=')
-            print('genee', genee)
             gene_name = genee[1]
 
             LINK = 'http://rest.ensembl.org/homology/symbol/human/BRCA2?content-type=application/json'
@@ -253,10 +219,8 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
             conn = http.client.HTTPConnection(HOSTNAME)
             conn.request(METHOD, ENDPOINT, None, headers)
             r1 = conn.getresponse()
-            # print('r1', r1.status)
 
             text_json = r1.read().decode("utf-8")
-            print('txtjason', text_json)
             conn.close()
 
             user = json.loads(text_json)
@@ -265,7 +229,6 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
             # Get the id for the gene sequence
             for x in user['data']:
                 id = x['id']
-                print('id', id)
 
             # Get the sequence:
 
@@ -278,14 +241,11 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
             conn = http.client.HTTPConnection(HOSTNAME)
             conn.request(METHOD, ENDPOINT, None, headers)
             r1 = conn.getresponse()
-            print('r1', r1.status)
 
             text_json = r1.read().decode("utf-8")
-            print('txtjason', text_json)
             conn.close()
 
             user = json.loads(text_json)
-            termcolor.cprint('user {}'.format(user), 'cyan')
             termcolor.cprint('LINK {}'.format(HOSTNAME + ENDPOINT), 'green')
 
             sequence = user['seq']
@@ -317,7 +277,6 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
 
             # Get the Human Gene name
             genee = pathlist[1].split('=')
-            print('genee', genee)
             gene_name = genee[1]
 
             LINK = 'http://rest.ensembl.org/homology/symbol/human/BRCA2?content-type=application/json'
@@ -339,7 +298,6 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
             # Get the id for the gene sequence
             for x in user['data']:
                 id = x['id']
-                print('id', id)
 
             LINK = 'http://rest.ensembl.org/overlap/id/ENSG00000157764?feature=gene;content-type=application/json'
             HOSTNAME = "rest.ensembl.org"
@@ -350,22 +308,21 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
             conn = http.client.HTTPConnection(HOSTNAME)
             conn.request(METHOD, ENDPOINT, None, headers)
             r1 = conn.getresponse()
-            print('r1', r1.status)
 
             text_json = r1.read().decode("utf-8")
-            print('txtjason', text_json)
             conn.close()
 
             user = json.loads(text_json)
-            termcolor.cprint('user {}'.format(user), 'cyan')
             termcolor.cprint('LINK {}'.format(HOSTNAME + ENDPOINT), 'green')
 
+            # Get the data we have been asked for(start, end, id and chromosome):
             for x in user:
                 start = x['start']
                 end = x['end']
                 id = x['id']
                 chromosome = x['seq_region_name']
 
+            # Get the length:
             length = (end - start) + 1
 
             contents = """<!DOCTYPE html>
@@ -392,8 +349,8 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
         # When option chosen is Human Gene Sequence Info:
         elif resource == '/geneCalc':
 
+            # Get the name of the gene inserted:
             genee = pathlist[1].split('=')
-            print('genee', genee)
             gene_name = genee[1]
 
             LINK = 'http://rest.ensembl.org/homology/symbol/human/BRCA2?content-type=application/json'
@@ -415,7 +372,6 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
             # Get the id for the gene sequence
             for x in user['data']:
                 id = x['id']
-                print('id', id)
 
             LINK = 'http://rest.ensembl.org/sequence/id/ENSG00000139618?content-type=application/json'
             HOSTNAME = "rest.ensembl.org"
@@ -426,10 +382,8 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
             conn = http.client.HTTPConnection(HOSTNAME)
             conn.request(METHOD, ENDPOINT, None, headers)
             r1 = conn.getresponse()
-            print('r1', r1.status)
 
             text_json = r1.read().decode("utf-8")
-            print('txtjason', text_json)
             conn.close()
 
             user = json.loads(text_json)
@@ -437,10 +391,10 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
             termcolor.cprint('LINK {}'.format(HOSTNAME + ENDPOINT), 'green')
 
             sequence = user['seq']
-            print('sequene', sequence)
 
             len_sequence = len(sequence)
 
+            # Calculations for number and percentage of basis:
             A_number = 0
             C_number = 0
             T_number = 0
@@ -488,15 +442,14 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
 
         # When option chosen is Gene List:
         elif resource == '/geneList':
+            # Get the parameters inserted (start, end and chromosome):
             ppp = pathlist[1].split('&')
-            print('ppp', ppp)
             param1 = ppp[0].split('=')
             param2 = ppp[1].split('=')
             param3 = ppp[2].split('=')
             chromo = param1[1]
             start = param2[1]
             end = param3[1]
-            print('chromo {} , start {} , end {}'.format(chromo, start, end))
 
             LINK = 'http://rest.ensembl.org/overlap/region/human/7:140424943-140624564?content-type=application/json;feature=gene;feature=transcript;feature=cds;feature=exon'
             HOSTNAME = "rest.ensembl.org"
@@ -507,16 +460,15 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
             conn = http.client.HTTPConnection(HOSTNAME)
             conn.request(METHOD, ENDPOINT, None, headers)
             r1 = conn.getresponse()
-            print('r1', r1.status)
 
             text_json = r1.read().decode("utf-8")
-            print('txtjason', text_json)
             conn.close()
 
             user = json.loads(text_json)
             termcolor.cprint('user {}'.format(user), 'cyan')
             termcolor.cprint('LINK {}'.format(HOSTNAME + ENDPOINT), 'green')
 
+            # Get the data from those whose feature type in JSON is gene:
             external_name = ''
             for x in user:
                 type = x['feature_type']
