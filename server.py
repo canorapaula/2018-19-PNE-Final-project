@@ -75,7 +75,8 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
             limit = lim[1]
             limit = int(limit)
 
-            # If limit inserted is higher than the number of species in the databae:
+            # In esemble, if we go to the endpoint, list of species, it will say that there are 208 species in the
+            # ensemble database that's why if limit inserted is higher than the number of species in the database:
             if limit > 208:
                 contents = """<!DOCTYPE html>
         <html lang="en" dir="ltr">
